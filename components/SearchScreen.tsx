@@ -89,8 +89,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onSelectInstallation, onLog
               key={mode}
               onClick={() => setSearchMode(mode)}
               className={`flex-1 py-1.5 px-2 rounded text-xs sm:text-sm font-medium transition-all ${searchMode === mode
-                  ? 'bg-white dark:bg-gray-700 shadow-sm text-text-light dark:text-text-dark'
-                  : 'text-subtext-light dark:text-subtext-dark hover:text-text-light dark:hover:text-text-dark'
+                ? 'bg-white dark:bg-gray-700 shadow-sm text-text-light dark:text-text-dark'
+                : 'text-subtext-light dark:text-subtext-dark hover:text-text-light dark:hover:text-text-dark'
                 }`}
             >
               {mode}
@@ -109,6 +109,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onSelectInstallation, onLog
               className="block w-full pl-10 pr-10 py-2.5 bg-surface-variant-light dark:bg-surface-variant-dark border-transparent rounded-lg focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-black transition-colors text-text-light dark:text-text-dark placeholder-gray-500"
               placeholder={getPlaceholder()}
               type="text"
+              inputMode={searchMode === SearchMode.INSTALLATION ? "numeric" : "text"}
             />
             {query && (
               <button

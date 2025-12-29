@@ -64,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-border-dark p-8 w-full">
-          <div className="mb-6">
+          <div className="mb-6 text-center">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Bem-vindo</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Faça login para acessar o sistema.</p>
           </div>
@@ -136,13 +136,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </form>
         </div>
 
-        <div className="mt-8 text-center space-y-2">
-          <div className="flex items-center justify-center space-x-2 text-gray-400 dark:text-gray-600">
-            <span className="material-icons text-sm">wifi_off</span>
-            <span className="text-xs">Modo Offline Suportado</span>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-600 font-mono">
-            Versão 2.5.0 • Build {new Date().getFullYear()}
+        <div className="mt-8 text-center space-y-1">
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Defesa Civil
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Santa Maria de Jetibá
           </p>
         </div>
       </div>

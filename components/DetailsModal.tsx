@@ -111,20 +111,25 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ installation, onClose }) =>
           {/* Map Preview */}
           <div className="bg-white dark:bg-surface-variant-dark/30 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm">
             <div className="aspect-video bg-gray-200 dark:bg-gray-800 relative">
-              {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? (
-                <img
-                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${installation.pee_lat},${installation.pee_lng}&zoom=15&size=400x300&markers=color:red%7C${installation.pee_lat},${installation.pee_lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}
-                  alt="Mapa"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <span className="material-icons text-4xl mb-2">map</span>
-                    <p className="text-xs">Preview do mapa</p>
-                  </div>
-                </div>
-              )}
+              <img
+                src={`https://staticmap.openstreetmap.de/staticmap.php?center=${installation.pee_lat},${installation.pee_lng}&zoom=15&size=400x300&markers=${installation.pee_lat},${installation.pee_lng},red-pushpin`}
+                alt="Mapa"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `
+                      <div class="w-full h-full flex items-center justify-center text-gray-400">
+                        <div class="text-center">
+                          <span class="material-icons text-4xl mb-2">map</span>
+                          <p class="text-xs">Preview do mapa</p>
+                        </div>
+                      </div>
+                    `;
+                  }
+                }}
+              />
             </div>
           </div>
         </div>

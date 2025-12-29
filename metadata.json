@@ -1,0 +1,8 @@
+
+{
+  "name": "GeoRescue - Civil Defense Search",
+  "description": "A robust civil defense management system for searching installations and recording service reports, featuring a specialized UI for field operations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

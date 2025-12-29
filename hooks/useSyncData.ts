@@ -68,12 +68,17 @@ export function useSyncData() {
         }))
 
         try {
-            // Fetch all installations from Supabase
-            const installations = await getAllInstallations()
+            // Fetch all installations from Supabase with progress tracking
+            const installations = await getAllInstallations((count) => {
+                setSyncState(prev => ({
+                    ...prev,
+                    progress: Math.min(Math.round((count / 21510) * 80), 80) // up to 80% for download
+                }))
+            })
 
             setSyncState(prev => ({
                 ...prev,
-                progress: 50
+                progress: 90 // Processing/Caching
             }))
 
             // Cache in IndexedDB

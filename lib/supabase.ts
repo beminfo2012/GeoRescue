@@ -20,14 +20,31 @@ export interface Installation {
 }
 
 // Helper functions
-export async function getAllInstallations() {
-    const { data, error } = await supabase
-        .from('electrical_installations')
-        .select('*')
-        .order('installation_number')
+export async function getAllInstallations(onProgress?: (count: number) => void) {
+    let allData: Installation[] = []
+    let page = 0
+    const pageSize = 1000
+    let hasMore = true
 
-    if (error) throw error
-    return data as Installation[]
+    while (hasMore) {
+        const { data, error, count } = await supabase
+            .from('electrical_installations')
+            .select('*', { count: 'exact' })
+            .order('installation_number')
+            .range(page * pageSize, (page + 1) * pageSize - 1)
+
+        if (error) throw error
+
+        if (data) {
+            allData = [...allData, ...(data as Installation[])]
+            if (onProgress) onProgress(allData.length)
+        }
+
+        hasMore = data.length === pageSize
+        page++
+    }
+
+    return allData
 }
 
 export async function searchInstallations(query: string, mode: 'installation' | 'name' | 'address') {

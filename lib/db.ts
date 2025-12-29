@@ -52,11 +52,16 @@ export async function getDB() {
 export async function cacheInstallations(installations: Installation[]) {
     const db = await getDB()
     const tx = db.transaction('installations', 'readwrite')
+    const store = tx.objectStore('installations')
 
-    await Promise.all([
-        ...installations.map(installation => tx.store.put(installation)),
-        tx.done
-    ])
+    // Clear existing to ensure fresh state
+    await store.clear()
+
+    for (const installation of installations) {
+        await store.put(installation)
+    }
+
+    await tx.done
 
     // Update sync metadata
     await setSyncMetadata('last_sync', {

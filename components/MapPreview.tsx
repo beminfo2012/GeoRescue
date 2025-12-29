@@ -24,39 +24,28 @@ const MapPreview: React.FC<MapPreviewProps> = ({ installations = [] }) => {
   const centerLat = lats.reduce((a, b) => a + b, 0) / lats.length;
   const centerLng = lngs.reduce((a, b) => a + b, 0) / lngs.length;
 
-  // Use OpenStreetMap Static Map API (free, no API key needed)
-  const zoom = 13;
-  const width = 600;
-  const height = 400;
-
-  // Create markers for first installation
-  const markerLat = installations[0].pee_lat;
-  const markerLng = installations[0].pee_lng;
-
-  // Using StaticMap.org (free OpenStreetMap static maps)
-  const mapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${centerLat},${centerLng}&zoom=${zoom}&size=${width}x${height}&markers=${markerLat},${markerLng},red-pushpin`;
+  // Open in Google Maps (works without API key)
+  const openInMaps = () => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${centerLat},${centerLng}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="w-full h-full relative bg-gray-200 dark:bg-gray-800">
-      <img
-        src={mapUrl}
-        alt="Mapa de instalações"
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          // Fallback if map fails to load
-          e.currentTarget.style.display = 'none';
-          const parent = e.currentTarget.parentElement;
-          if (parent) {
-            parent.innerHTML = `
-              <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 p-4">
-                <span class="material-icons text-5xl mb-3">map</span>
-                <p class="text-sm font-medium mb-2">${installations.length} instalação(ões) encontrada(s)</p>
-                <p class="text-xs text-center">Centro: ${centerLat.toFixed(6)}, ${centerLng.toFixed(6)}</p>
-              </div>
-            `;
-          }
-        }}
-      />
+      <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 p-4">
+        <span className="material-icons text-6xl mb-4 text-primary">location_on</span>
+        <p className="text-sm font-medium mb-2">{installations.length} instalação(ões) encontrada(s)</p>
+        <p className="text-xs text-center mb-4">
+          Centro: {centerLat.toFixed(6)}, {centerLng.toFixed(6)}
+        </p>
+        <button
+          onClick={openInMaps}
+          className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+        >
+          <span className="material-icons text-base">map</span>
+          Ver no Google Maps
+        </button>
+      </div>
 
       {/* Overlay with count */}
       <div className="absolute top-2 left-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg px-3 py-1.5 border border-gray-200 dark:border-gray-700">

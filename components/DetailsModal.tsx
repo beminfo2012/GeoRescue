@@ -110,26 +110,16 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ installation, onClose }) =>
 
           {/* Map Preview */}
           <div className="bg-white dark:bg-surface-variant-dark/30 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm">
-            <div className="aspect-video bg-gray-200 dark:bg-gray-800 relative">
-              <img
-                src={`https://staticmap.openstreetmap.de/staticmap.php?center=${installation.pee_lat},${installation.pee_lng}&zoom=15&size=400x300&markers=${installation.pee_lat},${installation.pee_lng},red-pushpin`}
-                alt="Mapa"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const parent = e.currentTarget.parentElement;
-                  if (parent) {
-                    parent.innerHTML = `
-                      <div class="w-full h-full flex items-center justify-center text-gray-400">
-                        <div class="text-center">
-                          <span class="material-icons text-4xl mb-2">map</span>
-                          <p class="text-xs">Preview do mapa</p>
-                        </div>
-                      </div>
-                    `;
-                  }
-                }}
-              />
+            <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 relative flex items-center justify-center">
+              <div className="text-center">
+                <span className="material-icons text-primary text-6xl mb-3">location_on</span>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Localização da Instalação
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">
+                  {installation.pee_lat.toFixed(6)}, {installation.pee_lng.toFixed(6)}
+                </p>
+              </div>
             </div>
           </div>
         </div>

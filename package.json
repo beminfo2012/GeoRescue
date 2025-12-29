@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "process-csv": "tsx scripts/processCSV.ts",
-    "seed-db": "tsx scripts/seedDatabase.ts",
-    "check-env": "tsx scripts/checkEnv.ts"
+    "seed-db": "tsx scripts/seedDatabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",

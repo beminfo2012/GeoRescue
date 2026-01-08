@@ -19,8 +19,6 @@ interface ProcessedInstallation {
 
 function extractUCDigits(fullUC: string): string {
     if (!fullUC) return ''
-    // Format: 0.002.217.642.054-14
-    // segments: [0, 002, 217, 642, 054-14]
     const parts = fullUC.split('.')
     if (parts.length >= 4) {
         return `${parts[2]}.${parts[3]}`
@@ -43,18 +41,17 @@ async function processCSV() {
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
 
-    // Rows: [Instalação, Código Unidade Consumidora, Status da UC, NOME_BAIRRO, NOME_LOGRADOURO, LATITUDE, LONGITUDE]
+    // Header 0: Instalação, 1: Código Unidade Consumidora, 2: Status da UC, 3: NOME_BAIRRO, 4: NOME_LOGRADOURO, 5: LATITUDE, 6: LONGITUDE
     const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][]
     const dataLines = rawData.slice(1)
 
-    console.log(`📊 Found ${dataLines.length} records`)
+    console.log(`📊 Found ${dataLines.length} total records in Excel`)
 
     const installations: ProcessedInstallation[] = []
     let validCount = 0
     let invalidCount = 0
 
     for (const row of dataLines) {
-        // We need at least column 1 (UC) and columns 5, 6 (Coords)
         if (!row || row.length < 7) {
             invalidCount++
             continue
@@ -63,10 +60,9 @@ async function processCSV() {
         const fullUC = String(row[1] || '')
         const ucFormatted = extractUCDigits(fullUC)
 
-        const street = String(row[4] || '').trim()
+        const street = String(row[4] || '').trim() || 'SEM NOME'
         const district = String(row[3] || '').trim()
 
-        // Coordinates at index 5 and 6
         const lat = parseFloat(String(row[5] || '').replace(',', '.'))
         const lng = parseFloat(String(row[6] || '').replace(',', '.'))
 
@@ -77,7 +73,7 @@ async function processCSV() {
 
         installations.push({
             installation_number: ucFormatted,
-            name: street || 'SEM NOME',
+            name: street,
             address: district,
             street: street,
             client_lat: null,

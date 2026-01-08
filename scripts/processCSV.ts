@@ -1,20 +1,10 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+import * as XLSX from 'xlsx'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-
-interface RawCSVRow {
-    NOME: string
-    INSTALACAO: string
-    ENDEREÇO: string
-    RUA: string
-    CLIENTE_LAT: string
-    CLIENTE_LONG: string
-    COORDENADA_LAT_PEE: string
-    COORDENADA_LONG_PEE: string
-}
 
 interface ProcessedInstallation {
     installation_number: string
@@ -27,26 +17,35 @@ interface ProcessedInstallation {
     pee_lng: number
 }
 
-function parseCoordinate(coord: string): number | null {
-    if (!coord || coord.trim() === '') return null
-    // Replace comma with dot for decimal separator
-    const normalized = coord.replace(',', '.')
-    const parsed = parseFloat(normalized)
-    return isNaN(parsed) ? null : parsed
+function extractUCDigits(fullUC: string): string {
+    if (!fullUC) return ''
+    // Format: 0.002.217.642.054-14
+    // segments: [0, 002, 217, 642, 054-14]
+    const parts = fullUC.split('.')
+    if (parts.length >= 4) {
+        return `${parts[2]}.${parts[3]}`
+    }
+    return fullUC
 }
 
 async function processCSV() {
-    console.log('🔄 Processing CSV file...')
+    console.log('🔄 Processing Excel file...')
 
-    const csvPath = path.join(__dirname, '..', 'relatorio_edp.csv')
+    const excelPath = path.join(__dirname, '..', 'UC_PMSMJ-PRO0296618.xlsx')
     const outputPath = path.join(__dirname, '..', 'installations.json')
 
-    // Read CSV file
-    const csvContent = fs.readFileSync(csvPath, 'utf-8')
-    const lines = csvContent.split('\n')
+    if (!fs.existsSync(excelPath)) {
+        console.error(`❌ File not found: ${excelPath}`)
+        return
+    }
 
-    // Skip header
-    const dataLines = lines.slice(1).filter(line => line.trim())
+    const workbook = XLSX.readFile(excelPath)
+    const sheetName = workbook.SheetNames[0]
+    const worksheet = workbook.Sheets[sheetName]
+
+    // Rows: [Instalação, Código Unidade Consumidora, Status da UC, NOME_BAIRRO, NOME_LOGRADOURO, LATITUDE, LONGITUDE]
+    const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][]
+    const dataLines = rawData.slice(1)
 
     console.log(`📊 Found ${dataLines.length} records`)
 
@@ -54,48 +53,46 @@ async function processCSV() {
     let validCount = 0
     let invalidCount = 0
 
-    for (const line of dataLines) {
-        // Split by semicolon
-        const parts = line.split(';')
-
-        if (parts.length < 8) {
+    for (const row of dataLines) {
+        // We need at least column 1 (UC) and columns 5, 6 (Coords)
+        if (!row || row.length < 7) {
             invalidCount++
             continue
         }
 
-        const [name, installation, address, street, clientLat, clientLng, peeLat, peeLng] = parts
+        const fullUC = String(row[1] || '')
+        const ucFormatted = extractUCDigits(fullUC)
 
-        // Parse coordinates
-        const peeLatNum = parseCoordinate(peeLat)
-        const peeLngNum = parseCoordinate(peeLng)
+        const street = String(row[4] || '').trim()
+        const district = String(row[3] || '').trim()
 
-        // Skip if primary coordinates are missing
-        if (peeLatNum === null || peeLngNum === null) {
+        // Coordinates at index 5 and 6
+        const lat = parseFloat(String(row[5] || '').replace(',', '.'))
+        const lng = parseFloat(String(row[6] || '').replace(',', '.'))
+
+        if (isNaN(lat) || isNaN(lng)) {
             invalidCount++
             continue
         }
 
         installations.push({
-            installation_number: installation.trim(),
-            name: name.trim(),
-            address: address.trim(),
-            street: street.trim(),
-            client_lat: parseCoordinate(clientLat),
-            client_lng: parseCoordinate(clientLng),
-            pee_lat: peeLatNum,
-            pee_lng: peeLngNum
+            installation_number: ucFormatted,
+            name: street || 'SEM NOME',
+            address: district,
+            street: street,
+            client_lat: null,
+            client_lng: null,
+            pee_lat: lat,
+            pee_lng: lng
         })
 
         validCount++
     }
 
-    // Write to JSON file
     fs.writeFileSync(outputPath, JSON.stringify(installations, null, 2), 'utf-8')
-
-    console.log(`✅ Processed ${validCount} valid installations`)
+    console.log(`✅ Processed ${validCount} valid units`)
     console.log(`❌ Skipped ${invalidCount} invalid records`)
     console.log(`💾 Saved to ${outputPath}`)
-    console.log(`📦 File size: ${(fs.statSync(outputPath).size / 1024 / 1024).toFixed(2)} MB`)
 }
 
 processCSV().catch(console.error)

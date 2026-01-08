@@ -15,7 +15,7 @@ export interface Installation {
 
 export enum SearchMode {
   NAME = 'Por Nome',
-  INSTALLATION = 'Por Instalação',
+  INSTALLATION = 'Por UC',
   ADDRESS = 'Por Endereço'
 }
 

@@ -42,7 +42,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onSelectInstallation, onLog
   const getPlaceholder = () => {
     switch (searchMode) {
       case SearchMode.INSTALLATION:
-        return 'Digite o número da instalação...';
+        return 'Digite o número da UC (ex: 276.076)...';
       case SearchMode.NAME:
         return 'Digite o nome...';
       case SearchMode.ADDRESS:
@@ -147,7 +147,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onSelectInstallation, onLog
         ) : results.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-subtext-light dark:text-subtext-dark">
             <span className="material-icons text-4xl mb-2">search</span>
-            <span className="text-sm">Digite para buscar instalações</span>
+            <span className="text-sm">Digite para buscar Unidades Consumidoras</span>
           </div>
         ) : (
           results.map((item) => (

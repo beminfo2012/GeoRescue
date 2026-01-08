@@ -36,9 +36,9 @@ CREATE POLICY "Allow service role to manage installations"
   WITH CHECK (true);
 
 -- Comments
-COMMENT ON TABLE electrical_installations IS 'Electrical installations for Civil Defense search system';
-COMMENT ON COLUMN electrical_installations.installation_number IS 'Unique installation number from EDP';
-COMMENT ON COLUMN electrical_installations.pee_lat IS 'Primary latitude coordinate (PEE)';
-COMMENT ON COLUMN electrical_installations.pee_lng IS 'Primary longitude coordinate (PEE)';
-COMMENT ON COLUMN electrical_installations.client_lat IS 'Optional client-specific latitude';
-COMMENT ON COLUMN electrical_installations.client_lng IS 'Optional client-specific longitude';
+COMMENT ON TABLE electrical_installations IS 'Unidades Consumidoras para sistema de busca da Defesa Civil';
+COMMENT ON COLUMN electrical_installations.installation_number IS 'Número simplificado da UC (6 dígitos centrais)';
+COMMENT ON COLUMN electrical_installations.pee_lat IS 'Latitude coordenada primária';
+COMMENT ON COLUMN electrical_installations.pee_lng IS 'Longitude coordenada primária';
+COMMENT ON COLUMN electrical_installations.client_lat IS 'Latitude opcional do cliente';
+COMMENT ON COLUMN electrical_installations.client_lng IS 'Longitude opcional do cliente';

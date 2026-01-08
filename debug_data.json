@@ -1,0 +1,47 @@
+[
+  [
+    "Instalação",
+    "Código Unidade Consumidora",
+    "Status da UC",
+    "NOME_BAIRRO",
+    "NOME_LOGRADOURO",
+    "LATITUDE",
+    "LONGITUDE"
+  ],
+  [
+    160881534,
+    "0.002.217.642.054-14",
+    "Instalação, com equipamento, contrato ativo, ligado",
+    "SAO LUIZ",
+    "RUA HENRIQUE FREDERICO STHUR",
+    -20.0025867868,
+    -40.7392450491
+  ],
+  [
+    160939968,
+    "0.002.276.076.054-53",
+    "Instalação, com equipamento, contrato ativo, ligado",
+    "AREA RURAL",
+    "CRG RECREIO",
+    -19.99576,
+    -40.673278
+  ],
+  [
+    160935747,
+    "0.002.271.855.054-67",
+    "Instalação, com equipamento, contrato ativo, ligado",
+    "VILA JETIBA",
+    "RUA FRIEDA MIERTSCHINK STANGE",
+    -20.019176,
+    -40.761685
+  ],
+  [
+    160951068,
+    "0.002.287.176.054-47",
+    "Instalação, com equipamento, contrato ativo, ligado",
+    "GARRAFAO",
+    "CRG RIO TAQUARA",
+    -20.154446,
+    -41.010947
+  ]
+]
